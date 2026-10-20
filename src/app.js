@@ -3,22 +3,16 @@
 const { checkIsValidUserInput } = require('./modules/checkIsValidUserInput');
 const { generateRandomNumber } = require('./modules/generateRandomNumber');
 const { getBullsAndCows } = require('./modules/getBullsAndCows');
-
-const readline = require('node:readline');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const { getUserInput, showMessage, closeInput } = require('./modules/io');
 
 function playGame() {
   const numberToGuess = generateRandomNumber();
 
   function askUser() {
-    rl.question('Enter a 4-digit number: ', (userInput) => {
+    getUserInput('Enter a 4-digit number: ', (userInput) => {
       if (!checkIsValidUserInput(userInput)) {
-        process.stdout.write(
-          'Invalid input. Enter 4 different digits without starting with 0.\n',
+        showMessage(
+          'Invalid input. Enter 4 different digits without starting with 0.',
         );
 
         askUser();
@@ -28,11 +22,11 @@ function playGame() {
 
       const { bulls, cows } = getBullsAndCows(userInput, numberToGuess);
 
-      process.stdout.write(`Bulls: ${bulls}, Cows: ${cows}\n`);
+      showMessage(`Bulls: ${bulls}, Cows: ${cows}`);
 
       if (bulls === 4) {
-        process.stdout.write('Congratulations! You guessed the number!\n');
-        rl.close();
+        showMessage('Congratulations! You guessed the number!');
+        closeInput();
 
         return;
       }
